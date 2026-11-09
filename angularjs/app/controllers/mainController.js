@@ -21,6 +21,9 @@
         vm.cursos = dataService.getCursos();
 
         vm.pesquisa = '';
+        vm.atualizarPesquisa = function () {
+        vm.paginaAtual = 1;
+    };
 
         vm.paginaAtual = 1;
         vm.itensPorPagina = 3;

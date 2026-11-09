@@ -1,3 +1,4 @@
+
 (function () {
     'use strict';
 
@@ -38,7 +39,7 @@
                 </div>
             `,
 
-            link: function (scope) {
+            link: function (scope, element) {
 
                 scope.menuAberto = false;
                 scope.opcaoSelecionada = '';
@@ -55,6 +56,29 @@
                         opcao: opcao
                     });
                 };
+
+                function fecharAoClicarFora(event) {
+                    if (
+                        !element[0].contains(event.target) &&
+                        scope.menuAberto
+                    ) {
+                        scope.$applyAsync(function () {
+                            scope.menuAberto = false;
+                        });
+                    }
+                }
+
+                document.addEventListener(
+                    'click',
+                    fecharAoClicarFora
+                );
+
+                scope.$on('$destroy', function () {
+                    document.removeEventListener(
+                        'click',
+                        fecharAoClicarFora
+                    );
+                });
 
             }
         };
