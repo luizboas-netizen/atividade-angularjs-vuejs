@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" ng-app="eduCaWebApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EducaWeb | Painel Administrativo</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body ng-controller="MainController as vm">
+
+    <header class="topbar">
+        <div class="logo">
+            <span class="logo-icon">E</span>
+            <span>EducaWeb</span>
+        </div>
+
+        <div class="admin-user">
+            <div class="avatar">AD</div>
+            <span>Administrador</span>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <p class="sidebar-title">MENU PRINCIPAL</p>
+
+            <button ng-click="vm.alterarMenu('dashboard')"
+                    ng-class="{active: vm.menuAtivo === 'dashboard'}">
+                Dashboard
+            </button>
+
+            <button ng-click="vm.alterarMenu('alunos')"
+                    ng-class="{active: vm.menuAtivo === 'alunos'}">
+                Alunos
+            </button>
+
+            <button ng-click="vm.alterarMenu('cursos')"
+                    ng-class="{active: vm.menuAtivo === 'cursos'}">
+                Cursos
+            </button>
+
+            <button ng-click="vm.alterarMenu('componentes')"
+                    ng-class="{active: vm.menuAtivo === 'componentes'}">
+                Componentes
+            </button>
+        </aside>
+
+        <main class="main-content">
+
+            <section ng-if="vm.menuAtivo === 'dashboard'">
+
+                <div class="page-heading">
+                    <div>
+                        <h1>{{vm.titulo}}</h1>
+                        <p>{{vm.subtitulo}}</p>
+                    </div>
+
+                    <span class="status-badge">Sistema ativo</span>
+                </div>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <span>Alunos cadastrados</span>
+                        <strong>{{vm.alunos.length}}</strong>
+                        <small>Total de registros</small>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Cursos disponíveis</span>
+                        <strong>{{vm.cursos.length}}</strong>
+                        <small>Cursos cadastrados</small>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Progresso geral</span>
+                        <strong>{{vm.progressoGeral}}%</strong>
+                        <small>Meta de desempenho</small>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h2>Bem-vindo ao EducaWeb</h2>
+                    <p>
+                        Utilize o painel para acompanhar alunos,
+                        cursos e indicadores da plataforma.
+                    </p>
+
+                    <h3>Progresso geral</h3>
+                    <progress-bar value="vm.progressoGeral"></progress-bar>
+                </div>
+
+                <div class="content-card">
+                    <h2>Aluno em destaque</h2>
+                    <p><strong>Nome:</strong> {{vm.aluno.nome}}</p>
+                    <p><strong>Curso:</strong> {{vm.aluno.curso}}</p>
+                </div>
+
+            </section>
+
+            <section ng-if="vm.menuAtivo === 'alunos'">
+
+                <div class="page-heading">
+                    <div>
+                        <h1>Alunos</h1>
+                        <p>Gerenciamento dos alunos cadastrados.</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <input
+                        type="text"
+                        class="search-input"
+                        ng-model="vm.pesquisa"
+                        placeholder="Pesquisar aluno...">
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Curso</th>
+                                    <th>Status</th>
+                                    <th>Progresso</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat="aluno in vm.alunosPagina() | filter:vm.pesquisa">
+                                    <td>{{aluno.nome}}</td>
+                                    <td>{{aluno.curso}}</td>
+                                    <td>{{aluno.status}}</td>
+                                    <td>{{aluno.progresso | number:0}}%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <pagination
+                        total-pages="vm.totalPaginas"
+                        current-page="vm.paginaAtual"
+                        on-page-change="vm.mudarPagina(page)">
+                    </pagination>
+                </div>
+
+            </section>
+
+            <section ng-if="vm.menuAtivo === 'cursos'">
+
+                <div class="page-heading">
+                    <div>
+                        <h1>Cursos</h1>
+                        <p>Consulte os cursos disponíveis.</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="course-list">
+                        <div class="course-item"
+                             ng-repeat="curso in vm.cursos">
+                            <span>{{curso}}</span>
+                            <span class="status-badge">Disponível</span>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section ng-if="vm.menuAtivo === 'componentes'">
+
+                <div class="page-heading">
+                    <div>
+                        <h1>Componentes AngularJS</h1>
+                        <p>Exemplos interativos das seis diretivas obrigatórias.</p>
+                    </div>
+                </div>
+
+                <div class="component-grid">
+
+                    <div class="content-card">
+                        <h2>1. Accordion</h2>
+                        <p>Seções expansíveis e recolhíveis.</p>
+                        <accordion items="vm.accordionItems"></accordion>
+                    </div>
+
+                    <div class="content-card">
+                        <h2>2. Pagination</h2>
+                        <p>Navegação entre páginas.</p>
+                        <pagination
+                            total-pages="vm.totalPaginas"
+                            current-page="vm.paginaAtual"
+                            on-page-change="vm.mudarPagina(page)">
+                        </pagination>
+                    </div>
+
+                    <div class="content-card">
+                        <h2>3. Progress Bar</h2>
+                        <p>Indicador visual de progresso.</p>
+                        <progress-bar value="vm.progressoGeral"></progress-bar>
+                    </div>
+
+                    <div class="content-card">
+                        <h2>4. Tabs</h2>
+                        <p>Organização de conteúdo em abas.</p>
+                        <tabs items="vm.tabsItems"></tabs>
+                    </div>
+
+                    <div class="content-card">
+                        <h2>5. Dropdown Menu</h2>
+                        <p>Seleção de opções.</p>
+                        <dropdown
+                            options="vm.dropdownOptions"
+                            on-select="vm.selecionarOpcao(opcao)">
+                        </dropdown>
+                    </div>
+
+                    <div class="content-card">
+                        <h2>6. Toast Notification</h2>
+                        <p>Mensagens temporárias de feedback.</p>
+
+                        <div class="toast-actions">
+                            <button ng-click="vm.mostrarToast('success', 'Operação realizada com sucesso!')">
+                                Sucesso
+                            </button>
+
+                            <button ng-click="vm.mostrarToast('error', 'Ocorreu um erro na operação.')">
+                                Erro
+                            </button>
+
+                            <button ng-click="vm.mostrarToast('info', 'Esta é uma mensagem informativa.')">
+                                Informação
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <toast
+        message="vm.toast.message"
+        type="vm.toast.type"
+        visible="vm.toast.visible"
+        on-close="vm.fecharToast()">
+    </toast>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <script src="app/app.js"></script>
+    <script src="app/services/dataService.js"></script>
+    <script src="app/controllers/mainController.js"></script>
+
+    <script src="app/directives/accordionDirective.js"></script>
+    <script src="app/directives/paginationDirective.js"></script>
+    <script src="app/directives/progressBarDirective.js"></script>
+    <script src="app/directives/tabsDirective.js"></script>
+    <script src="app/directives/dropdownDirective.js"></script>
+    <script src="app/directives/toastDirective.js"></script>
+
+</body>
+</html>
